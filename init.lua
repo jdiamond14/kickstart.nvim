@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -248,14 +248,73 @@ rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
-
+  'aliqyan-21/wit.nvim',
+  'nvim-treesitter/nvim-treesitter',
+  'voldikss/vim-floaterm',
+  -- Search from Normal mode
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
   -- keys can be used to configure plugin behavior/loading/etc.
   --
   -- Use `opts = {}` to automatically pass options to a plugin's `setup()` function, forcing the plugin to be loaded.
   --
-
+  {
+    'aliqyan-21/wit.nvim',
+    config = function()
+      require("wit").setup({
+        engine = "google",
+        command_search = "Lookup",
+        command_search_visual = "Lookupimage",
+        command_search_wiki = "Lookupwiki",
+      })
+    end,
+  },
+  {
+  "coder/claudecode.nvim",
+  dependencies = { "folke/snacks.nvim" },
+  config = true,
+  keys = {
+    { "<leader>a", nil, desc = "AI/Claude Code" },
+    { "<leader>ac", "<cmd>ClaudeCode<cr>", desc = "Toggle Claude" },
+    { "<leader>af", "<cmd>ClaudeCodeFocus<cr>", desc = "Focus Claude" },
+    { "<leader>ar", "<cmd>ClaudeCode --resume<cr>", desc = "Resume Claude" },
+    { "<leader>aC", "<cmd>ClaudeCode --continue<cr>", desc = "Continue Claude" },
+    { "<leader>am", "<cmd>ClaudeCodeSelectModel<cr>", desc = "Select Claude model" },
+    { "<leader>ab", "<cmd>ClaudeCodeAdd %<cr>", desc = "Add current buffer" },
+    { "<leader>as", "<cmd>ClaudeCodeSend<cr>", mode = "v", desc = "Send to Claude" },
+    {
+      "<leader>as",
+      "<cmd>ClaudeCodeTreeAdd<cr>",
+      desc = "Add file",
+      ft = { "NvimTree", "neo-tree", "oil", "minifiles", "netrw" },
+    },
+    -- Diff management
+    { "<leader>aa", "<cmd>ClaudeCodeDiffAccept<cr>", desc = "Accept diff" },
+    { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "Deny diff" },
+  },
+},
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.nvim' },            -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-mini/mini.icons' },        -- if you use standalone mini plugins
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+},
+{
+  'wasabeef/bufferin.nvim',
+  cmd = { "Bufferin" },
+  config = function()
+    require('bufferin').setup()
+  end,
+  -- Optional dependencies for enhanced experience
+  dependencies = { 
+    'nvim-tree/nvim-web-devicons', -- For file icons
+    -- 'willothy/nvim-cokeline',     -- For buffer line integration
+    -- 'akinsho/bufferline.nvim',    -- Alternative buffer line
+  }
+},
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
   --    {
@@ -283,7 +342,7 @@ require('lazy').setup({
       },
     },
   },
-
+  { "nvim-tree/nvim-web-devicons", opts = {} },
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
   -- This is often very useful to both group configuration, as well as handle
@@ -377,6 +436,10 @@ require('lazy').setup({
         end,
       },
       { 'nvim-telescope/telescope-ui-select.nvim' },
+      {
+          "nvim-telescope/telescope-file-browser.nvim",
+          dependencies = { "nvim-telescope/telescope.nvim", "nvim-lua/plenary.nvim" }
+      },
 
       -- Useful for getting pretty icons, but requires a Nerd Font.
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
@@ -417,12 +480,14 @@ require('lazy').setup({
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
           },
+          
         },
       }
 
       -- Enable Telescope extensions if they are installed
       pcall(require('telescope').load_extension, 'fzf')
       pcall(require('telescope').load_extension, 'ui-select')
+      pcall(require('telescope').load_extension, 'media_files')
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
@@ -475,13 +540,7 @@ require('lazy').setup({
       },
     },
   },
-  {
-    -- Main LSP Configuration
-    'neovim/nvim-lspconfig',
-    dependencies = {
-      -- Automatically install LSPs and related tools to stdpath for Neovim
-      -- Mason must be loaded before its dependents so we need to set it up here.
-      -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
+  { -- Main LSP Configuration 'neovim/nvim-lspconfig', dependencies = { Automatically install LSPs and related tools to stdpath for Neovim Mason must be loaded before its dependents so we need to set it up here. NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       { 'mason-org/mason.nvim', opts = {} },
       'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -989,8 +1048,8 @@ require('lazy').setup({
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
-  -- you can continue same window with `<space>sr` which resumes last telescope search
-}, {
+  -- you can continue same window with `<space>sr` which resumes last telescope search}, 
+{
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
