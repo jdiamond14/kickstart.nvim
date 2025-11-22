@@ -315,6 +315,71 @@ require('lazy').setup({
     -- 'akinsho/bufferline.nvim',    -- Alternative buffer line
   }
 },
+
+  -- Carbon-inspired themes
+  {
+    'nyoom-engineering/oxocarbon.nvim',
+    priority = 1000,
+    lazy = false,
+  },
+  {
+    'EdenEast/nightfox.nvim',
+    priority = 1000,
+    lazy = false,
+    config = function()
+      require('nightfox').setup({
+        options = {
+          transparent = false,
+          styles = {
+            comments = 'italic',
+            keywords = 'bold',
+            types = 'italic,bold',
+          }
+        }
+      })
+    end,
+  },
+  {
+    'folke/tokyonight.nvim',
+    priority = 1000,
+    lazy = false,
+    opts = {
+      style = 'night',
+      transparent = false,
+      styles = {
+        comments = { italic = true },
+        keywords = { italic = true },
+      },
+    },
+  },
+  {
+    'navarasu/onedark.nvim',
+    priority = 1000,
+    lazy = false,
+    opts = {
+      style = 'darker',
+      transparent = false,
+      code_style = {
+        comments = 'italic',
+        keywords = 'bold',
+      },
+    },
+  },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    lazy = false,
+    opts = {
+      flavour = 'mocha',
+      transparent_background = false,
+      styles = {
+        comments = { 'italic' },
+        conditionals = { 'italic' },
+      },
+    },
+  },
+
   -- Alternatively, use `config = function() ... end` for full control over the configuration.
   -- If you prefer to call `setup` explicitly, use:
   --    {
@@ -540,7 +605,12 @@ require('lazy').setup({
       },
     },
   },
-  { -- Main LSP Configuration 'neovim/nvim-lspconfig', dependencies = { Automatically install LSPs and related tools to stdpath for Neovim Mason must be loaded before its dependents so we need to set it up here. NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
+  { -- Main LSP Configuration
+    'neovim/nvim-lspconfig',
+    dependencies = {
+      -- Automatically install LSPs and related tools to stdpath for Neovim
+      -- Mason must be loaded before its dependents so we need to set it up here.
+      -- NOTE: `opts = {}` is the same as calling `require('mason').setup({})`
       { 'mason-org/mason.nvim', opts = {} },
       'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
@@ -757,6 +827,7 @@ require('lazy').setup({
             },
           },
         },
+        terraformls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -953,7 +1024,7 @@ require('lazy').setup({
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+      vim.cmd.colorscheme 'carbonfox'
     end,
   },
 
@@ -1036,7 +1107,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
-  -- require 'kickstart.plugins.neo-tree',
+  require 'kickstart.plugins.neo-tree',
   -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -1048,8 +1119,8 @@ require('lazy').setup({
   -- For additional information with loading, sourcing and examples see `:help lazy.nvim-🔌-plugin-spec`
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
-  -- you can continue same window with `<space>sr` which resumes last telescope search}, 
-{
+  -- you can continue same window with `<space>sr` which resumes last telescope search
+}, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
     -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
